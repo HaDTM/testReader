@@ -3,6 +3,7 @@ package functions;
 import core.AppiumBase;
 import core.Locators;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -24,39 +25,36 @@ public class FaceMocAuto extends AppiumBase {
         }
         int i = 1;
         while (i <= 1000) {
-            //Khai báo locator của nút Chụp
-            String captureBtnPath = String.format(Locators.getLocator("captureButton"), i);
-            WebElement captureBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(captureBtnPath)));
-
             try {
-                //Nhấn Chụp
+                System.out.println("Lần chụp: " + i);
+                WebElement captureBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(Locators.getLocator("captureButton"))));
                 captureBtn.click();
+                System.out.println("Đã nhấn nút Chụp");
+
                 try {
-                    wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-                    String btnOKPath = String.format(Locators.getLocator("okButton"), i);
-                    WebElement btnOK = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(btnOKPath)));
+                    WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(3));
+                    WebElement btnOK = shortWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(Locators.getLocator("okButton"))));
+                    if (btnOK.isDisplayed()) {
+                        System.out.println("Popup lỗi xuất hiện → nhấn OK");
+                        btnOK.click();
+                        captureBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(Locators.getLocator("captureButton"))));
+                        captureBtn.click();
+                    }
+                } catch (TimeoutException e) {
+                    System.out.println("Không có popup lỗi xuất hiện.");
+                }
 
-                    try {
-                        //Nếu xảy ra lỗi extract template -> Nhấn nút OK để tắt popup
-                        if (btnOK.isDisplayed()) {
-                            btnOK.click();
-                            WebElement captureBtn2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(captureBtnPath)));
-                            captureBtn2.click();
-                        }
-                    } catch (Exception e) {}
-                } catch (Exception e) {}
-            } catch (Exception e) {}
+                try {
+                    WebElement finishBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(Locators.getLocator("nútfinish"))));
+                    finishBtn.click();
+                    System.out.println("Đã nhấn nút Finish");
+                } catch (TimeoutException e) {
+                    System.out.println("Không tìm thấy nút Finish lần " + i);
+                }
 
-            try {
-                // Khai báo và bấm nút Finish
-                String finishBtnPath = String.format(Locators.getLocator("finishButton"), i);
-                WebElement finishBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(finishBtnPath)));
-                finishBtn.click();
-
-                // In ra số lần chạy
-                System.out.println(i);
-            } catch (Exception e) {}
-
+            } catch (TimeoutException e) {
+                System.out.println("Không tìm thấy nút Chụp lần " + i);
+            }
             i++;
         }
     }

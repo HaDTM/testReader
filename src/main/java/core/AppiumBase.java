@@ -25,8 +25,8 @@ public class AppiumBase {
 
         // Thiết lập capability bằng chuỗi thay vì MobileCapabilityType
         options.setCapability("platformName", "iOS");
-        options.setCapability("deviceName", "iPhone 12Prm");
-        options.setCapability("appium:udid", "00008101-001E6D210C10001E");
+        options.setCapability("deviceName", "iPhone 12");
+        options.setCapability("appium:udid", "00008101-001A543911E1001E");
         options.setCapability("appium:automationName", "XCUITest");
         options.setCapability("appium:xcodeOrgId", "49LPZHKUL7");
         options.setCapability("appium:xcodeSigningId", "iPhone Developer");
@@ -37,7 +37,7 @@ public class AppiumBase {
 //        driver = new IOSDriver(new URL("http://127.0.0.1:4723/wd/hub"), options);
 
         // Kết nối đến WebDriverAgent đang chạy trên thiết bị thật qua Wi-Fi
-        URL wdaUrl = new URL("http://10.30.102.8:8100"); // IP iPhone
+        URL wdaUrl = new URL("http://10.30.100.204:8100"); // IP iPhone
 //
 //        // Khởi tạo driver
         driver = new IOSDriver(wdaUrl, options);
