@@ -23,6 +23,9 @@ public class FaceMocAuto extends AppiumBase {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
+        long startTime = System.currentTimeMillis(); // ⏱️ Thời điểm bắt đầu
+        System.out.println("Start time: " + new java.util.Date(startTime));
+
         int i = 1;
         while (i <= 1000) {
             try {
@@ -45,6 +48,7 @@ public class FaceMocAuto extends AppiumBase {
                 }
 
                 try {
+
                     WebElement finishBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(Locators.getLocator("nútfinish"))));
                     finishBtn.click();
                     System.out.println("Đã nhấn nút Finish");
@@ -57,5 +61,8 @@ public class FaceMocAuto extends AppiumBase {
             }
             i++;
         }
+        long endTime = System.currentTimeMillis(); // ⏱️ Thời điểm kết thúc
+        System.out.println("End time: " + new java.util.Date(endTime));
+        System.out.println("Total time: " + (endTime - startTime) + "ms");
     }
 }
